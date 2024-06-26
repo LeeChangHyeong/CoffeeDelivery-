@@ -20,6 +20,8 @@ public class CafeMenuListResponseDto {
 
     private List<MenuResponseDto> menuList;
 
+    private String test;
+
     public CafeMenuListResponseDto(Cafe cafe, List<MenuResponseDto> menuList) {
         this.cafeId = cafe.getCafeId();
         this.cafeName = cafe.getCafeName();
