@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/users")
@@ -49,6 +51,12 @@ public class UserController {
         MessageResponseDto responseDto = userService.reissueToken(request, response);
 
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    // 좋아요 한 카페 조회
+    @GetMapping("/cafes")
+    public ResponseEntity<List<CafeResponseDto>> getLikecafe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getLikecafe(userDetails.getUser());
     }
 
 }
