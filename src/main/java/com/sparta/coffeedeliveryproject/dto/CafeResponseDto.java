@@ -23,5 +23,4 @@ public class CafeResponseDto {
         this.cafeAddress = cafe.getCafeAddress();
         this.cafeLikeCount = cafe.getCafeLikeCount();
     }
-
 }
