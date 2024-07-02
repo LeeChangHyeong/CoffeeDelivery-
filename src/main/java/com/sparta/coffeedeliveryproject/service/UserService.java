@@ -21,10 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -211,6 +208,7 @@ public class UserService {
 
         List<CafeResponseDto> responseDtos = cafeLikes.stream()
                 .map(cafeLike -> new CafeResponseDto(cafeLike.getCafe()))
+                .sorted(Comparator.comparing(CafeResponseDto::getCafeCreatedAt))
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(responseDtos);
