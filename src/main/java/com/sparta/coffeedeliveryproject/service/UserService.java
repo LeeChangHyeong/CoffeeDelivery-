@@ -1,12 +1,14 @@
 package com.sparta.coffeedeliveryproject.service;
 
 import com.sparta.coffeedeliveryproject.dto.*;
+import com.sparta.coffeedeliveryproject.entity.CafeLike;
 import com.sparta.coffeedeliveryproject.entity.User;
 import com.sparta.coffeedeliveryproject.entity.UserRole;
 import com.sparta.coffeedeliveryproject.enums.UserStatusEnum;
 import com.sparta.coffeedeliveryproject.exceptions.PasswordMismatchException;
 import com.sparta.coffeedeliveryproject.exceptions.RecentlyUsedPasswordException;
 import com.sparta.coffeedeliveryproject.jwt.JwtUtil;
+import com.sparta.coffeedeliveryproject.repository.CafeLikeRepository;
 import com.sparta.coffeedeliveryproject.repository.UserRepository;
 import com.sparta.coffeedeliveryproject.repository.UserRoleRepository;
 import io.jsonwebtoken.Claims;
@@ -14,13 +16,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +35,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
+    private final CafeLikeRepository cafeLikeRepository;
+
     @Value("${ADMIN_TOKEN}")
     String adminToken;
 
@@ -194,6 +201,21 @@ public class UserService {
         return new MessageResponseDto("로그아웃이 완료되었습니다.");
     }
 
+    // 본인이 좋아요 누른 카페 확인하기
+    public ResponseEntity<List<CafeResponseDto>> getLikecafe(User user) {
+        List<CafeLike> cafeLikes = cafeLikeRepository.findByUser(user);
+
+        if(cafeLikes.isEmpty()) {
+            throw new IllegalArgumentException("좋아요를 누른 카페가 없습니다.");
+        }
+
+        List<CafeResponseDto> responseDtos = cafeLikes.stream()
+                .map(cafeLike -> new CafeResponseDto(cafeLike.getCafe()))
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseDtos);
+    }
+
     private User findUserById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자의 프로필을 찾을 수 없습니다."));
@@ -209,5 +231,4 @@ public class UserService {
                 () -> new IllegalArgumentException("등록된 사용자가 없습니다.")
         );
     }
-
 }
