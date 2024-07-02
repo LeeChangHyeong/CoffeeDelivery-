@@ -31,5 +31,4 @@ public class CafeLikeController {
         MessageResponseDto responseDto = cafeLikeService.unlikeCafe(cafeId, userDetails.getUser());
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
-
 }
