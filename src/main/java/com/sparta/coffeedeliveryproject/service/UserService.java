@@ -16,6 +16,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -199,7 +202,7 @@ public class UserService {
     }
 
     // 본인이 좋아요 누른 카페 확인하기
-    public ResponseEntity<List<CafeResponseDto>> getLikecafe(User user) {
+    public ResponseEntity<Page<CafeResponseDto>> getLikecafe(User user, Pageable pageable) {
         List<CafeLike> cafeLikes = cafeLikeRepository.findByUser(user);
 
         if(cafeLikes.isEmpty()) {
@@ -211,7 +214,12 @@ public class UserService {
                 .sorted(Comparator.comparing(CafeResponseDto::getCafeCreatedAt))
                 .collect(Collectors.toList());
 
-        return ResponseEntity.ok(responseDtos);
+// 페이징 처리
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), responseDtos.size());
+        Page<CafeResponseDto> page = new PageImpl<>(responseDtos.subList(start, end), pageable, responseDtos.size());
+
+        return ResponseEntity.ok(page);
     }
 
     private User findUserById(Long userId) {

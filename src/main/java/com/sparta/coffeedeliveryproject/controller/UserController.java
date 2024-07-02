@@ -7,6 +7,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -55,8 +58,11 @@ public class UserController {
 
     // 좋아요 한 카페 조회
     @GetMapping("/cafes")
-    public ResponseEntity<List<CafeResponseDto>> getLikecafe(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return userService.getLikecafe(userDetails.getUser());
+    public ResponseEntity<List<CafeResponseDto>> getLikecafe(@RequestParam(value = "page", defaultValue = "1") int page , @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Pageable pageable = PageRequest.of(page - 1, 5); // 페이지 번호를 0부터 시작하도록 수정
+        Page<CafeResponseDto> cafePage = userService.getLikecafe(userDetails.getUser(), pageable).getBody();
+        List<CafeResponseDto> content = cafePage.getContent();
+        return ResponseEntity.ok(content);
     }
 
 }
