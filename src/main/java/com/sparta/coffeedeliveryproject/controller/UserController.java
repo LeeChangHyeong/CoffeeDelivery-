@@ -65,4 +65,15 @@ public class UserController {
 
         return ResponseEntity.ok(content);
     }
+
+    // 좋아요 한 리뷰 조회
+    @GetMapping("/reviews")
+    public ResponseEntity<List<ReviewResponseDto>> getLikeReview(@RequestParam("page") int page, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        Pageable pageable = PageRequest.of(page - 1, 5);
+        Page<ReviewResponseDto> reviewPage = userService.getLikeReview(userDetails.getUser(), pageable);
+        List<ReviewResponseDto> content = reviewPage.getContent();
+
+        return ResponseEntity.ok(content);
+    }
+
 }

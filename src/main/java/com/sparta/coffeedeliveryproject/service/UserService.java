@@ -8,10 +8,7 @@ import com.sparta.coffeedeliveryproject.enums.UserStatusEnum;
 import com.sparta.coffeedeliveryproject.exceptions.PasswordMismatchException;
 import com.sparta.coffeedeliveryproject.exceptions.RecentlyUsedPasswordException;
 import com.sparta.coffeedeliveryproject.jwt.JwtUtil;
-import com.sparta.coffeedeliveryproject.repository.CafeLikeRepository;
-import com.sparta.coffeedeliveryproject.repository.CafeLikeRepositoryCustom;
-import com.sparta.coffeedeliveryproject.repository.UserRepository;
-import com.sparta.coffeedeliveryproject.repository.UserRoleRepository;
+import com.sparta.coffeedeliveryproject.repository.*;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +35,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
     private final CafeLikeRepositoryCustom cafeLikeRepositoryCustom;
+    private final ReviewLikeRepositoryCustom reviewLikeRepositoryCustom;
 
     @Value("${ADMIN_TOKEN}")
     String adminToken;
@@ -206,6 +204,11 @@ public class UserService {
     // 본인이 좋아요 누른 카페 확인하기
     public Page<CafeResponseDto> getLikeCafe(User user, Pageable pageable) {
         return cafeLikeRepositoryCustom.findLikedCafesByUserOrderByLikeCreatedAtDesc(user, pageable);
+    }
+
+//     본인이 좋아요 누른 리뷰 확인
+    public Page<ReviewResponseDto> getLikeReview(User user, Pageable pageable) {
+        return reviewLikeRepositoryCustom.findLikedReviewsByUserOrderByLikeCreatedAtDesc(user, pageable);
     }
 
     private User findUserById(Long userId) {
