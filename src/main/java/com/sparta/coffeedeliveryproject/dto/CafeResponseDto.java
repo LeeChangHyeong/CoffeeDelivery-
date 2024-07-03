@@ -1,5 +1,6 @@
 package com.sparta.coffeedeliveryproject.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.sparta.coffeedeliveryproject.entity.Cafe;
 import lombok.Getter;
 

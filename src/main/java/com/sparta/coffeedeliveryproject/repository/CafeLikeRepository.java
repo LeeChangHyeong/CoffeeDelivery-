@@ -9,7 +9,4 @@ import java.util.Optional;
 
 public interface CafeLikeRepository extends JpaRepository<CafeLike, Long> {
     Optional<CafeLike> findByCafeCafeIdAndUserUserId(Long cafeId, Long userId);
-
-    // 유저로 찾기위해 생성
-    List<CafeLike> findByUser(User user);
 }

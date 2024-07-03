@@ -9,6 +9,7 @@ import com.sparta.coffeedeliveryproject.exceptions.PasswordMismatchException;
 import com.sparta.coffeedeliveryproject.exceptions.RecentlyUsedPasswordException;
 import com.sparta.coffeedeliveryproject.jwt.JwtUtil;
 import com.sparta.coffeedeliveryproject.repository.CafeLikeRepository;
+import com.sparta.coffeedeliveryproject.repository.CafeLikeRepositoryCustom;
 import com.sparta.coffeedeliveryproject.repository.UserRepository;
 import com.sparta.coffeedeliveryproject.repository.UserRoleRepository;
 import io.jsonwebtoken.Claims;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,7 +37,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final JwtUtil jwtUtil;
-    private final CafeLikeRepository cafeLikeRepository;
+    private final CafeLikeRepositoryCustom cafeLikeRepositoryCustom;
 
     @Value("${ADMIN_TOKEN}")
     String adminToken;
@@ -202,24 +204,8 @@ public class UserService {
     }
 
     // 본인이 좋아요 누른 카페 확인하기
-    public ResponseEntity<Page<CafeResponseDto>> getLikecafe(User user, Pageable pageable) {
-        List<CafeLike> cafeLikes = cafeLikeRepository.findByUser(user);
-
-        if(cafeLikes.isEmpty()) {
-            throw new IllegalArgumentException("좋아요를 누른 카페가 없습니다.");
-        }
-
-        List<CafeResponseDto> responseDtos = cafeLikes.stream()
-                .map(cafeLike -> new CafeResponseDto(cafeLike.getCafe()))
-                .sorted(Comparator.comparing(CafeResponseDto::getCafeCreatedAt))
-                .collect(Collectors.toList());
-
-// 페이징 처리
-        int start = (int) pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), responseDtos.size());
-        Page<CafeResponseDto> page = new PageImpl<>(responseDtos.subList(start, end), pageable, responseDtos.size());
-
-        return ResponseEntity.ok(page);
+    public Page<CafeResponseDto> getLikeCafe(User user, Pageable pageable) {
+        return cafeLikeRepositoryCustom.findLikedCafesByUserOrderByLikeCreatedAtDesc(user, pageable);
     }
 
     private User findUserById(Long userId) {
