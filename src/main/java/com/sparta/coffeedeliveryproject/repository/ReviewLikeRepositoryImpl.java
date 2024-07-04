@@ -45,4 +45,14 @@ public class ReviewLikeRepositoryImpl implements ReviewLikeRepositoryCustom {
 
         return new PageImpl<>(responseDtos, pageable, total);
     }
+
+    @Override
+    public long findLikedReviewsCount(User user) {
+        QReviewLike qReviewLike = QReviewLike.reviewLike;
+
+        return jpaQueryFactory
+                .selectFrom(qReviewLike)
+                .where(qReviewLike.user.eq(user))
+                .fetchCount();
+    }
 }

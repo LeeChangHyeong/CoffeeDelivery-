@@ -46,4 +46,14 @@ public class CafeLikeRepositoryImpl implements CafeLikeRepositoryCustom {
 
         return new PageImpl<>(responseDtos, pageable, total);
     }
+
+    @Override
+    public long findLikedCafesCount(User user) {
+        QCafeLike qCafeLike = QCafeLike.cafeLike;
+
+        return jpaQueryFactory
+                .selectFrom(qCafeLike)
+                .where(qCafeLike.user.eq(user))
+                .fetchCount();
+    }
 }

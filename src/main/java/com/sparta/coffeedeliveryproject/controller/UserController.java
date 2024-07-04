@@ -66,6 +66,11 @@ public class UserController {
         return ResponseEntity.ok(content);
     }
 
+    @GetMapping("/profile")
+    public UserProfileResponseDto getProfile(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return userService.getProfile(userDetails.getUser());
+    }
+
     // 좋아요 한 리뷰 조회
     @GetMapping("/reviews")
     public ResponseEntity<List<ReviewResponseDto>> getLikeReview(@RequestParam("page") int page, @AuthenticationPrincipal UserDetailsImpl userDetails) {

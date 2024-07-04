@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ReviewLikeRepositoryCustom {
     Page<ReviewResponseDto> findLikedReviewsByUserOrderByLikeCreatedAtDesc(User user, Pageable pageable);
+
+    long findLikedReviewsCount(User user);
 }

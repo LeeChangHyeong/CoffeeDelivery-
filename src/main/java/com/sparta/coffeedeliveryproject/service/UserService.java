@@ -37,6 +37,7 @@ public class UserService {
     private final CafeLikeRepositoryCustom cafeLikeRepositoryCustom;
     private final ReviewLikeRepositoryCustom reviewLikeRepositoryCustom;
 
+
     @Value("${ADMIN_TOKEN}")
     String adminToken;
 
@@ -204,6 +205,14 @@ public class UserService {
     // 본인이 좋아요 누른 카페 확인하기
     public Page<CafeResponseDto> getLikeCafe(User user, Pageable pageable) {
         return cafeLikeRepositoryCustom.findLikedCafesByUserOrderByLikeCreatedAtDesc(user, pageable);
+    }
+
+    // 본인 정보 조회
+    public UserProfileResponseDto getProfile(User user) {
+        long cafeLikesCount = cafeLikeRepositoryCustom.findLikedCafesCount(user);
+        long reviewLikesCount = reviewLikeRepositoryCustom.findLikedReviewsCount(user);
+
+        return new UserProfileResponseDto(user, cafeLikesCount, reviewLikesCount);
     }
 
 //     본인이 좋아요 누른 리뷰 확인

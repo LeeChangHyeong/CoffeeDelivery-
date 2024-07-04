@@ -8,4 +8,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface CafeLikeRepositoryCustom {
     Page<CafeResponseDto> findLikedCafesByUserOrderByLikeCreatedAtDesc(User user, Pageable pageable);
+
+    long findLikedCafesCount(User user);
 }
