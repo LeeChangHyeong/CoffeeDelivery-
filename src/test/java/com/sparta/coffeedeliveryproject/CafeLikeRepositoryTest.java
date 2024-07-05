@@ -1,29 +1,26 @@
 package com.sparta.coffeedeliveryproject;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.coffeedeliveryproject.dto.CafeResponseDto;
 import com.sparta.coffeedeliveryproject.entity.Cafe;
 import com.sparta.coffeedeliveryproject.entity.CafeLike;
 import com.sparta.coffeedeliveryproject.entity.User;
-import com.sparta.coffeedeliveryproject.repository.CafeLikeRepository;
 import com.sparta.coffeedeliveryproject.repository.CafeLikeRepositoryCustom;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.NONE;
 
-@AutoConfigureTestDatabase(replace = NONE)
 @Import(TestConfig.class)
 @DataJpaTest
+@ActiveProfiles("test")
 public class CafeLikeRepositoryTest {
 
     @Autowired
