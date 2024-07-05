@@ -1,12 +1,9 @@
 package com.sparta.coffeedeliveryproject.dto;
 
 import com.sparta.coffeedeliveryproject.entity.User;
-import com.sparta.coffeedeliveryproject.entity.UserRole;
 import com.sparta.coffeedeliveryproject.enums.UserStatusEnum;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
-import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor

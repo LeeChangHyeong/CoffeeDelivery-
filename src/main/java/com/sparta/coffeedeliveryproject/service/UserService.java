@@ -1,30 +1,30 @@
 package com.sparta.coffeedeliveryproject.service;
 
 import com.sparta.coffeedeliveryproject.dto.*;
-import com.sparta.coffeedeliveryproject.entity.CafeLike;
 import com.sparta.coffeedeliveryproject.entity.User;
 import com.sparta.coffeedeliveryproject.entity.UserRole;
 import com.sparta.coffeedeliveryproject.enums.UserStatusEnum;
 import com.sparta.coffeedeliveryproject.exceptions.PasswordMismatchException;
 import com.sparta.coffeedeliveryproject.exceptions.RecentlyUsedPasswordException;
 import com.sparta.coffeedeliveryproject.jwt.JwtUtil;
-import com.sparta.coffeedeliveryproject.repository.*;
+import com.sparta.coffeedeliveryproject.repository.CafeLikeRepositoryCustom;
+import com.sparta.coffeedeliveryproject.repository.ReviewLikeRepositoryCustom;
+import com.sparta.coffeedeliveryproject.repository.UserRepository;
+import com.sparta.coffeedeliveryproject.repository.UserRoleRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
